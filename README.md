@@ -97,6 +97,48 @@ React DnD 使用[HTML5 拖放 API](https://developer.mozilla.org/en-US/docs/Web/
 React-DnD 提供了将组件连接到 DnD 引擎的钩子，并允许您收集监视器状态以进行渲染。
 
 有关基于 hooks 的 API 的概述，请参阅[Hooks 概述](https://react-dnd.github.io/react-dnd/docs/api/hooks-overview)页面。
+
+# DragSourceMonitor
+DragSourceMonitor是[传递给拖动源(dragging source)](https://react-dnd.github.io/react-dnd/docs/api/use-drag)的收集函数的对象。它的方法让您可以获取有关特定拖动源的拖动状态的信息。绑定到该监视器的特定拖动源在下面称为监视器的所有者。
+
+## Methods
+
+### canDrag()
+如果没有进行拖动操作，并且所有者的`canDrag()`返回`true`或未定义，则返回`true`。
+
+### isDragging()
+如果正在进行拖动操作，并且所有者启动了拖动 则返回`true`，或者其`isDragging()`已定义并返回，则返回`true`。
+
+### getItemType()
+返回一个字符串或一个符号，标识当前拖动项的类型。如果没有项目被拖动，则返回`null`。
+
+### getItem()
+返回一个表示当前拖动项目的普通对象。每个拖动源都必须通过从其`beginDrag()`方法返回一个对象来指定它。如果没有项目被拖动，则返回`null`。
+
+### getDropResult()
+返回一个普通对象，表示最后记录的放置结果。放置目标可以选择通过从它们的`drop()`方法返回一个对象来指定它。
+当通过`drop()`为嵌套目标调度一个链时，自下而上，任何从`drop()`显式返回其自己结果的父级都会覆盖子级先前设置的子级放置结果。如果在外部调用`endDrag()`则返回`null`。
+
+### didDrop()
+如果某个放置目标已处理放置事件，则返回`true`，否则返回`false`。
+即使目标没有返回放置结果，也会在执行`didDrop()`后返回`true`。
+在内部使用`endDrag()`来测试是否有任何放置目标处理了放置。如果在外部调用`endDrag()`则返回`false`。
+
+### getInitialClientOffset()
+返回当前拖动操作开始时指针的客户端偏移量`{ x, y }`。如果没有项目被拖动，则返回`null`。
+
+### getInitialSourceClientOffset()
+返回当前拖拽操作开始时拖拽源组件的根DOM节点的客户端偏移量`{ x, y }`。如果没有项目被拖动，则返回`null`。
+
+### getClientOffset()
+在拖动操作正在进行时返回指针的最后记录的客户端偏移量`{ x, y }`。如果没有项目被拖动，则返回`null`。
+
+### getDifferenceFromInitialOffset()
+返回上次记录的指针客户端偏移量与当前拖动操作开始时的客户端偏移量之间的差值`{ x, y }`。如果没有项目被拖动，则返回`null`。
+
+### getSourceClientOffset()
+根据当前拖动操作开始时的位置和移动差异，返回拖动源组件的根 DOM 节点的投影客户端偏移量`{ x, y }`。如果没有项目被拖动，则返回`null`。
+
 # DropTargetMonitor
 `DropTargetMonitor`是传递给[放置目标](https://react-dnd.github.io/react-dnd/docs/api/use-drop)的收集函数的对象。它的方法让您可以获取有关特定放置目标的拖动状态的信息。绑定到该监视器的特定放置目标在下面称为监视器的所有者(`monitor's owner`)。
 ## Methods
@@ -111,7 +153,7 @@ React-DnD 提供了将组件连接到 DnD 引擎的钩子，并允许您收集�
 ### getDropResult()
 返回一个普通对象，表示最后记录的放置结果。放置目标可以选择通过从它们的`drop()`方法返回一个对象来指定它。当为嵌套目标分派一个`drop()`链时，自下而上，任何从`drop()`显式返回其自身结果的父级都会覆盖先前由子级设置的放置结果。如果在外部调`drop()`则返回`null`。
 ### didDrop()
-如果某个放置目标已处理放置事件，则返回`true`，否则返回`false`。即使目标没有返回丢弃结果，也会`didDrop()`返回`true`. 在内部使用它`drop()`来测试是否有任何嵌套的放置目标已经处理了放置。如果在外部调用`drop()`则返回`false`。
+如果某个放置目标已处理放置事件，则返回`true`，否则返回`false`。即使目标没有返回放置结果，也会`didDrop()`返回`true`. 在内部使用它`drop()`来测试是否有任何嵌套的放置目标已经处理了放置。如果在外部调用`drop()`则返回`false`。
 ### getInitialClientOffset()
 返回当前拖动操作开始时指针的客户端偏移量`{ x, y }`。如果没有项目被拖动，则返回`null`。
 ### getInitialSourceClientOffset()
